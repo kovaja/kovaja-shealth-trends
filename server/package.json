@@ -1,0 +1,25 @@
+{
+  "name": "shealth-trends-server",
+  "version": "0.0.1",
+  "description": "\"Shealth trends project - server side\"",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon",
+    "start": "nodemon ./dist/server.js",
+    "prod": "npm run build && npm run start",
+    "lint": "tslint -p tslint.json"
+  },
+  "author": "kovaja",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "typescript": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "nodemon": "^1.18.9",
+    "tslint": "^5.12.1"
+  }
+}

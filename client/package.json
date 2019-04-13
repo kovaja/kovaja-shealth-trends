@@ -1,0 +1,43 @@
+{
+  "name": "palinly-client",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-redux": "^6.0.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.3",
+    "redux": "^4.0.1",
+    "typescript": "3.2.4"
+  },
+  "scripts": {
+    "dev": "npm run start",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "proxy": "http://localhost:8000",
+  "devDependencies": {
+    "@types/jest": "23.3.13",
+    "@types/node": "10.12.18",
+    "@types/react": "16.7.21",
+    "@types/react-dom": "16.0.11",
+    "@types/react-redux": "^7.0.3",
+    "@types/react-router-dom": "^4.3.1",
+    "redux-devtools": "^3.5.0",
+    "tslint": "^5.12.1",
+    "tslint-react": "^3.6.0"
+  }
+}

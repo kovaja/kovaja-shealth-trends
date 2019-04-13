@@ -1,0 +1,3 @@
+DB User:
+name: plainly
+pwd: plainly123
