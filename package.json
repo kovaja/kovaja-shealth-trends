@@ -1,0 +1,11 @@
+{
+  "name": "kovaja-shealth-trends",
+  "version": "1.0.0",
+  "description": "Data visualisation tool for data from samsung health",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kovaja",
+  "license": "ISC"
+}
