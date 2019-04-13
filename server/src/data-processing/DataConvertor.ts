@@ -1,18 +1,17 @@
-const csvToJson = require('csvtojson');
-const fs = require('fs');
-
 const DEFAULT_DELIMITER = ',';
 
-module.exports = class DataConvertor {
-  constructor(delimiter) {
+export class DataConvertor {
+  private delimiter: string;
+
+  constructor(delimiter?) {
     this.delimiter = delimiter || DEFAULT_DELIMITER;
   }
 
-  stringify(json) {
-    return JSON.stringify(json, null, 2);
+  private log(message): void {
+    console.log('[DC]: ' + message);
   }
 
-  readCSVRow(row, headers) {
+  private readCSVRow(row: string, headers: string[]): {[key: string]: any} {
     const data = row.split(this.delimiter);
 
     const json = {};
@@ -24,7 +23,7 @@ module.exports = class DataConvertor {
     return json;
   }
 
-  convertToJson(csvString) {
+  private convertToJson(csvString: string): {[key: string]: any} [] {
     if (typeof csvString !== 'string') {
       throw new Error('[DC]: Not a CSV string');
     }
@@ -32,7 +31,7 @@ module.exports = class DataConvertor {
     const rows = csvString.split('\n');
 
     if (rows[0].includes('com.samsung.health')) {
-      console.log('[DC]: Skipping first row');
+      this.log('Skipping first row');
 
       rows.splice(0, 1);
     }
@@ -45,18 +44,15 @@ module.exports = class DataConvertor {
     const jsonArray = [];
 
     for (let i = 0; i < rows.length; i += 1) {
-      const dataObject = this.readCSVRow(rows[i], headers)
-      jsonArray.push(dataObject)
+      const dataObject = this.readCSVRow(rows[i], headers);
+      jsonArray.push(dataObject);
     }
 
     return jsonArray;
   }
 
 
-  convert(path, outputPath) {
-    const csvString = fs.readFileSync(path, 'utf8');
-    const json = this.convertToJson(csvString);
-
-    fs.writeFileSync(outputPath, this.stringify(json), 'utf8');
+  public convertBase64CSVStringToJson(base64String: string): {[key: string]: any} [] {
+    return this.convertToJson(base64String);
   }
-};
+}

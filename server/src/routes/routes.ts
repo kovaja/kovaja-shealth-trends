@@ -1,4 +1,5 @@
 import { Application, Request, Response, Router } from 'express';
+import { CSVRoute } from './csv.route';
 
 export class Routes {
   private handlePingRequest(req: Request, res: Response): void {
@@ -11,6 +12,7 @@ export class Routes {
     const router = Router();
 
     // new UserRoute(router);
+    new CSVRoute(router);
 
     app.use('/api', router);
 
