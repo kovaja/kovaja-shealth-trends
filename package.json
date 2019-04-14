@@ -3,7 +3,12 @@
   "version": "0.0.1",
   "description": "Project plainly",
   "scripts": {
-    "validate": "node ./tools/validation.js"
+    "validate": "node ./tools/validation.js",
+    "postinstall": "npm run client:install && npm run server:install",
+    "client:install": "cd client && npm install --only=dev && npm install && npm run build",
+    "server:install": "cd server && npm install --only=dev && npm install && npm run build",
+    "server": "cd server && npm run prod",
+    "start": "npm run server"
   },
   "repository": {
     "type": "git",

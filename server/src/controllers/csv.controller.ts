@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import { config } from '../config';
+import { appConfig } from '../app.config';
 import { DataConvertor } from '../data-processing/DataConvertor';
 
 export class CSVController {
@@ -22,7 +22,7 @@ export class CSVController {
   private getFilename(extension: string): string {
     const currentTS = new Date().getTime();
 
-    return path.resolve(config.FILE_STORAGE_PATH + '/test-file-' + currentTS + '.' + extension);
+    return path.resolve(appConfig.FILE_STORAGE_PATH + '/test-file-' + currentTS + '.' + extension);
   }
 
   public handleFileStream(req: Request, res: Response): void {
