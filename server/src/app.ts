@@ -1,9 +1,8 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import * as fs from 'fs';
 import * as path from 'path';
-import { appConfig } from './app.config';
 import { Routes } from './routes/routes';
+import { FileUtility } from './utilities/file.utility';
 
 const CLIENT_BUILD_PATH = '../../client/build';
 
@@ -13,7 +12,9 @@ class App {
 
   constructor() {
     this.app = express();
-    this.initFileFolder();
+
+    FileUtility.initializeFileFolder();
+
     this.config();
   }
 
@@ -32,12 +33,6 @@ class App {
 
     this.route = new Routes();
     this.route.initRoutes(this.app);
-  }
-
-  private initFileFolder(): void {
-    if (!fs.existsSync(appConfig.FILE_STORAGE_PATH)) {
-      fs.mkdirSync(appConfig.FILE_STORAGE_PATH);
-    }
   }
 }
 
