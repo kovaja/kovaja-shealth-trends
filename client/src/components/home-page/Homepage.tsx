@@ -5,27 +5,15 @@ import './Homepage.css';
 export default class Homepage extends Component {
   private file: File;
 
-  private read(): Promise<string> {
-    return new Promise((resolve, reject): void => {
-      const reader = new FileReader();
-
-      reader.onload = (): void => {
-        if (reader.error) {
-          reject(reader.error);
-        }
-
-        const stringResult =  reader.result as string;
-
-        resolve(stringResult.split(';')[1]);
-      };
-
-      reader.readAsDataURL(this.file);
-    });
-  }
-
-  private send(dataString: string): Promise<void> {
-    return Axios.post('/api/csv/base64', {data: dataString})
-    .then((response) => console.log(response));
+  private send(file: File): Promise<void> {
+    return Axios({
+      data: file,
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
+      method: 'POST',
+      url: '/api/csv/upload'
+    }).then((r) => console.log(r));
   }
 
   public onButtonClick = () => {
@@ -33,9 +21,7 @@ export default class Homepage extends Component {
       return;
     }
 
-    this.read()
-      .then(this.send.bind(this))
-      .catch((e) => console.log('Boo boo', e));
+    this.send(this.file).catch((e) => console.log('Boo boo', e));
   }
 
   public onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {

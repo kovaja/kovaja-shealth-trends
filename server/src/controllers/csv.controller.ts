@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
+import { config } from '../config';
 import { DataConvertor } from '../data-processing/DataConvertor';
 
 export class CSVController {
@@ -8,21 +11,32 @@ export class CSVController {
     this.convertor = new DataConvertor();
   }
 
-  public processBase64Csv(req: Request, res: Response): void {
-    let data = req.body.data;
+  private writeFile(data: any, filename: string): void {
+    const writeStream = fs.createWriteStream(filename);
+    const buffer = Buffer.from(data);
 
-    if (data.includes('base64,')) {
-      data = data.replace('base64,', '');
-      console.log('Replaced');
+    writeStream.write(buffer);
+    writeStream.end();
+  }
+
+  private getFilename(extension: string): string {
+    const currentTS = new Date().getTime();
+
+    return path.resolve(config.FILE_STORAGE_PATH + '/test-file-' + currentTS + '.' + extension);
+  }
+
+  public handleFileStream(req: Request, res: Response): void {
+    if (req.header('Content-Type') !== 'application/octet-stream') {
+      res.status(400).send({ error: 'Wrong content type, octet-stream expected' });
+      return;
     }
 
-    const csvString = Buffer.from(data, 'base64').toString('ascii');
+    const filename = this.getFilename('csv');
+    this.writeFile(req.body, filename);
 
-    const json = this.convertor.convertBase64CSVStringToJson(csvString);
-
-    res.status(200).send({
-      status: 'ok',
-      data: json
+    this.convertor.convertFileToJson(filename)
+    .then((json: object) => {
+      res.status(200).send(json);
     });
   }
 }

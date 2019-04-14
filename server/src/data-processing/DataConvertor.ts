@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 const DEFAULT_DELIMITER = ',';
 
 export class DataConvertor {
@@ -11,7 +13,7 @@ export class DataConvertor {
     console.log('[DC]: ' + message);
   }
 
-  private readCSVRow(row: string, headers: string[]): {[key: string]: any} {
+  private readCSVRow(row: string, headers: string[]): { [key: string]: any } {
     const data = row.split(this.delimiter);
 
     const json = {};
@@ -23,8 +25,8 @@ export class DataConvertor {
     return json;
   }
 
-  private convertToJson(csvString: string): {[key: string]: any} [] {
-    if (typeof csvString !== 'string') {
+  private convertToJson(csvString: string): { [key: string]: any }[] {
+    if (typeof csvString !== 'string' || csvString.length === 0) {
       throw new Error('[DC]: Not a CSV string');
     }
 
@@ -51,8 +53,17 @@ export class DataConvertor {
     return jsonArray;
   }
 
+  public convertFileToJson(path: string): Promise<{ [key: string]: any }[]> {
+    this.log('Reading ' + path);
 
-  public convertBase64CSVStringToJson(base64String: string): {[key: string]: any} [] {
-    return this.convertToJson(base64String);
+    return new Promise((resolve: Function, reject: Function): void => {
+      fs.readFile(path, 'utf8', (err: Error, data: string) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(this.convertToJson(data));
+      });
+    });
   }
 }

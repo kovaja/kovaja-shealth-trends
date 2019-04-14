@@ -8,6 +8,6 @@ export class CSVRoute {
 
     router.use('/csv', subRouter);
 
-    subRouter.post('/base64', controller.processBase64Csv.bind(controller));
+    subRouter.post('/upload', controller.handleFileStream.bind(controller));
   }
 }
