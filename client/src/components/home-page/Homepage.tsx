@@ -5,6 +5,7 @@ import './Homepage.css';
 
 export interface IHompageState {
   json: object;
+  progress: number;
 }
 
 export default class Homepage extends Component<{}, IHompageState> {
@@ -14,8 +15,14 @@ export default class Homepage extends Component<{}, IHompageState> {
     super(props);
 
     this.state = {
-      json: null
+      json: null,
+      progress: 0
     };
+  }
+
+  private setProgress(progressEvent: ProgressEvent): void {
+    const progress = Math.floor((progressEvent.loaded / progressEvent.total) * 100);
+    this.setState({progress});
   }
 
   private send(file: File): void {
@@ -24,6 +31,7 @@ export default class Homepage extends Component<{}, IHompageState> {
       headers: {
         'Content-Type': 'application/octet-stream'
       },
+      onUploadProgress: this.setProgress.bind(this),
       method: 'POST',
       url: '/api/csv/upload'
     })
@@ -39,6 +47,12 @@ export default class Homepage extends Component<{}, IHompageState> {
     this.send(this.file);
   }
 
+  public onPingClick = () => {
+    Axios.get('/api/ping')
+      .then((r) => this.setState({ json: r.data[0] }))
+      .catch((e) => console.log('Boo boo', e));
+  }
+
   public onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
     this.file = event.target.files[0];
   }
@@ -46,8 +60,11 @@ export default class Homepage extends Component<{}, IHompageState> {
   public render(): JSX.Element {
     return (
       <div className="full-background">
+        {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
         <input type="file" onChange={this.onFileChange} />
         <button type="button" onClick={this.onButtonClick}>SEND</button>
+        <hr />
+        <button type="button" onClick={this.onPingClick}>PING</button>
         <hr />
         {this.state.json ? <ReactJson src={this.state.json} /> : null}
       </div>
