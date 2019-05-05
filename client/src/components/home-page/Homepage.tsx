@@ -35,7 +35,10 @@ export default class Homepage extends Component<{}, IHompageState> {
       method: 'POST',
       url: '/api/csv/upload'
     })
-      .then((r) => this.setState({ json: r.data[0] }))
+      .then((r) => {
+        this.setState({ json: r.data[0] });
+        console.log(r.data);
+      })
       .catch((e) => console.log('Boo boo', e));
   }
 
@@ -48,7 +51,7 @@ export default class Homepage extends Component<{}, IHompageState> {
   }
 
   public onPingClick = () => {
-    Axios.get('/api/ping')
+    Axios.get('/api/user/key')
       .then((r) => this.setState({ json: r.data[0] }))
       .catch((e) => console.log('Boo boo', e));
   }
