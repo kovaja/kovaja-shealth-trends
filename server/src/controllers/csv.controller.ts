@@ -3,6 +3,7 @@ import * as fs from 'fs';
 // import { DataConvertor } from '../data-processing/DataConvertor';
 import { CommonUtility } from '../utilities/common.utility';
 import { FileUtility } from '../utilities/file.utility';
+import { Logger } from '../utilities/logger';
 
 export class CSVController {
   // private convertor; // TODO: convert csv to json and send to client
@@ -12,14 +13,11 @@ export class CSVController {
   }
 
   private onFileUploadError(res: Response, err: Error | string): void {
-    console.log(err);
-
+    Logger.error(err);
     res.status(400).send({ error: 'Upload failed' });
   }
 
   private onWriteFinished(res: Response): void {
-    console.log('Writing completed !');
-
     res.status(200).send({ok: 'Writing completed !'});
   }
 

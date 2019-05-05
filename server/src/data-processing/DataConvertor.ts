@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { Logger } from '../utilities/logger';
 
 const DEFAULT_DELIMITER = ',';
 
@@ -10,7 +11,7 @@ export class DataConvertor {
   }
 
   private log(message): void {
-    console.log('[DC]: ' + message);
+    Logger.log('[DC]', message);
   }
 
   private readCSVRow(row: string, headers: string[]): { [key: string]: any } {
