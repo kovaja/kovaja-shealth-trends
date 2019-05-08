@@ -8,6 +8,6 @@ export class UserRoute {
 
     router.use('/user', subRouter);
 
-    subRouter.get('/key', controller.generateUserKey.bind(controller));
+    subRouter.get('/init', controller.generateUserKey.bind(controller));
   }
 }

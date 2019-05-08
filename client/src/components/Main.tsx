@@ -23,7 +23,7 @@ class Main extends Component<IMainProps> {
   }
 
   public componentDidMount(): void {
-    UserService.getUserKey().then(this.onReceivedKey.bind(this));
+    UserService.initUser().then(this.onReceivedKey.bind(this));
   }
 
   public render(): JSX.Element {

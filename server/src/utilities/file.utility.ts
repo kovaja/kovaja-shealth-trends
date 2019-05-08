@@ -16,4 +16,22 @@ export class FileUtility {
     rimraf.sync(path);
     fs.mkdirSync(path);
   }
+
+  public static initializeUserFolder(key: number): Promise<void> {
+    const createUserFolder = (resolve, reject): void => {
+
+      const onDirCreated = (err: Error) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve();
+      };
+
+      fs.mkdir(AppConfig.FILE_STORAGE_PATH + '/' + key, onDirCreated);
+    };
+
+    return new Promise(createUserFolder);
+  }
 }
