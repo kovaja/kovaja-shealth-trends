@@ -1,10 +1,7 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import * as fs from 'fs';
 import { DataConvertor } from '../data-processing/DataConvertor';
-// import { DataConvertor } from '../data-processing/DataConvertor';
-import { CommonUtility } from '../utilities/common.utility';
 import { FileUtility } from '../utilities/file.utility';
-import { Logger } from '../utilities/logger';
 
 export class CSVController {
   private convertor: DataConvertor;
@@ -13,27 +10,15 @@ export class CSVController {
     this.convertor = new DataConvertor();
   }
 
-  private onFileUploadError(res: Response, err: Error | string): void {
-    Logger.error(err);
-    res.status(400).send({ error: 'Upload failed' });
+  private onFileUploadFinished(csvPath: string, data: object): Promise<object> {
+    const jsonPath = csvPath.replace('.csv', '.json');
+
+    return FileUtility.writeJSON(jsonPath, data)
+      .then(() => FileUtility.removeFile(csvPath))
+      .then(() => data);
   }
 
-  private onConvertFinished(res: Response, data: object): void {
-    res.status(200).send(data);
-  }
-
-  private onWriteFinished(res: Response, path: string): void {
-    this.convertor.convertFileToJson(path)
-    .then(this.onConvertFinished.bind(this, res))
-    .catch(this.onFileUploadError.bind(this, res));
-  }
-
-  public handleFileStream(req: Request, res: Response): void {
-    if (CommonUtility.isFileStreamRequest(req) === false) {
-      this.onFileUploadError(res, 'Wrong content type');
-      return;
-    }
-
+  public handleFileStream(req: Request, resolve: Function, reject: Function): void {
     const userKey = req.params['key'];
 
     const filePath = FileUtility.getFilePath(userKey, 'csv');
@@ -41,7 +26,13 @@ export class CSVController {
 
     req.pipe(writeStream);
 
-    writeStream.on('finish', this.onWriteFinished.bind(this, res, filePath));
-    writeStream.on('error', this.onFileUploadError.bind(this, res));
+    writeStream.on('finish', (): void => {
+      this.convertor
+        .convertFileToJson<object>(filePath)
+        .then(this.onFileUploadFinished.bind(this, filePath))
+        .then((data: object): void => resolve(data));
+    });
+
+    writeStream.on('error', (err: Error): void => reject(err));
   }
 }

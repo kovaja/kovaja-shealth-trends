@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as path from 'path';
 import { AppConfig } from './app.config';
 import { Routes } from './routes/routes';
-import { CommonUtility } from './utilities/common.utility';
+import { ApiUtility } from './utilities/api.utility';
 import { FileUtility } from './utilities/file.utility';
 
 class App {
@@ -26,7 +26,7 @@ class App {
   }
 
   private firstHandler(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    if (CommonUtility.isFileStreamRequest(req)) {
+    if (ApiUtility.isFileStreamRequest(req)) {
       next();
       return;
     }
