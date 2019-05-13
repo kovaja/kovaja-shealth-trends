@@ -8,7 +8,8 @@
     "client:install": "cd client && npm install --only=dev && npm install && npm run build",
     "server:install": "cd server && npm install --only=dev && npm install && npm run build",
     "server": "cd server && npm run prod",
-    "start": "npm run server"
+    "start": "npm run server",
+    "publish": "git push heroku master && heroku logs --tail -a kovaja-shealth-trends"
   },
   "repository": {
     "type": "git",
