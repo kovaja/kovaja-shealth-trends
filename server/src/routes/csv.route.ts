@@ -8,6 +8,6 @@ export class CSVRoute {
 
     router.use('/csv', subRouter);
 
-    subRouter.post('/upload', controller.handleFileStream.bind(controller));
+    subRouter.post('/upload/:key', controller.handleFileStream.bind(controller));
   }
 }

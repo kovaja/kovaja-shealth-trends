@@ -1,14 +1,21 @@
 import Axios from 'axios';
 import React, { ChangeEvent, Component } from 'react';
 import ReactJson from 'react-json-view';
+import { connect, MapStateToProps } from 'react-redux';
+import { IAppState } from '../../reducers/reducer';
+import FileUploadService from '../../services/file-upload.service';
 import './Homepage.css';
 
-export interface IHompageState {
+interface IHompageState {
   json: object;
   progress: number;
 }
 
-export default class Homepage extends Component<{}, IHompageState> {
+interface IHompageProps {
+  userKey: number;
+}
+
+class Homepage extends Component<IHompageProps, IHompageState> {
   private file: File;
 
   constructor(props: any) {
@@ -22,24 +29,11 @@ export default class Homepage extends Component<{}, IHompageState> {
 
   private setProgress(progressEvent: ProgressEvent): void {
     const progress = Math.floor((progressEvent.loaded / progressEvent.total) * 100);
-    this.setState({progress});
+    this.setState({ progress });
   }
 
   private send(file: File): void {
-    Axios({
-      data: file,
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      },
-      onUploadProgress: this.setProgress.bind(this),
-      method: 'POST',
-      url: '/api/csv/upload'
-    })
-      .then((r) => {
-        this.setState({ json: r.data[0] });
-        console.log(r.data);
-      })
-      .catch((e) => console.log('Boo boo', e));
+    FileUploadService.uploadFile(file, this.props.userKey, this.setProgress.bind(this));
   }
 
   public onButtonClick = () => {
@@ -51,8 +45,8 @@ export default class Homepage extends Component<{}, IHompageState> {
   }
 
   public onPingClick = () => {
-    Axios.get('/api/user/key')
-      .then((r) => this.setState({ json: r.data[0] }))
+    Axios.get('/api/ping')
+      .then((r) => console.log(r.data))
       .catch((e) => console.log('Boo boo', e));
   }
 
@@ -71,6 +65,14 @@ export default class Homepage extends Component<{}, IHompageState> {
         <hr />
         {this.state.json ? <ReactJson src={this.state.json} /> : null}
       </div>
-      );
-    }
+    );
   }
+}
+
+const mapStateToProps: MapStateToProps<IHompageProps, any, IAppState> = (state: IAppState): IHompageProps => {
+  return {
+    userKey: state.userKey
+  };
+};
+
+export default connect(mapStateToProps)(Homepage);

@@ -1,7 +1,7 @@
 import { ActionType, IAction } from '../actions/actions';
 
 export interface IAppState {
-  userKey: string;
+  userKey: number;
 }
 
 const defaultState: IAppState = {
