@@ -4,10 +4,10 @@ import * as rimraf from 'rimraf';
 import { AppConfig } from '../app.config';
 
 export class FileUtility {
-  public static getFilename(extension: string): string {
+  public static getFilePath(userKey: string, extension: string): string {
     const currentTS = new Date().getTime();
 
-    return path.resolve(AppConfig.FILE_STORAGE_PATH + '/test-file-' + currentTS + '.' + extension);
+    return path.resolve(AppConfig.FILE_STORAGE_PATH + '/' + userKey + '/test-file-' + currentTS + '.' + extension);
   }
 
   public static initializeFileFolder(): void {
