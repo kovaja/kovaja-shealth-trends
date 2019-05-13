@@ -33,7 +33,7 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   }
 
   private send(file: File): void {
-    FileUploadService.uploadFile(file, this.props.userKey, this.setProgress.bind(this));
+    FileUploadService.uploadFile(file, 'heart-rate', this.props.userKey,  this.setProgress.bind(this));
   }
 
   public onButtonClick = () => {

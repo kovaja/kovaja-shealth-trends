@@ -1,6 +1,8 @@
 import { Request } from 'express';
 import * as fs from 'fs';
+import { SupportedFileTypes } from '../constants/file-types';
 import { DataConvertor } from '../data-processing/DataConvertor';
+import { AppError } from '../models/AppError';
 import { FileUtility } from '../utilities/file.utility';
 
 export class CSVController {
@@ -20,8 +22,13 @@ export class CSVController {
 
   public handleFileStream(req: Request, resolve: Function, reject: Function): void {
     const userKey = req.params['key'];
+    const type = req.params['type'];
 
-    const filePath = FileUtility.getFilePath(userKey, 'csv');
+    if (SupportedFileTypes[type] !== true) {
+      reject(new AppError('Unknown file type'));
+    }
+
+    const filePath = FileUtility.getFilePath(type, userKey, 'csv');
     const writeStream = fs.createWriteStream(filePath);
 
     req.pipe(writeStream);

@@ -1,12 +1,11 @@
 import { Application, Request, Response, Router } from 'express';
+import { ApiUtility } from '../utilities/api.utility';
 import { CSVRoute } from './csv.route';
 import { UserRoute } from './user.route';
 
 export class Routes {
   private handlePingRequest(req: Request, res: Response): void {
-    res.status(200).send({
-      message: 'PONG! ' + new Date()
-    });
+    ApiUtility.handleResponse(res)('PONG! ' + new Date());
   }
 
   public initRoutes(app: Application): void {

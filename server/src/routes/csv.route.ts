@@ -12,7 +12,7 @@ export class CSVRoute {
 
     router.use('/csv', subRouter);
 
-    subRouter.post('/upload/:key', this.handleFileUpload.bind(this));
+    subRouter.post('/upload/:type/:key', this.handleFileUpload.bind(this));
   }
 
   private handleFileUpload(req: Request, res: Response): void {
