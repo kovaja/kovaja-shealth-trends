@@ -54,7 +54,7 @@ export class DataConvertor {
     return jsonArray;
   }
 
-  public convertFileToJson(path: string): Promise<{ [key: string]: any }[]> {
+  public convertFileToJson<T>(path: string): Promise<T> {
     this.log('Reading ' + path);
 
     return new Promise((resolve: Function, reject: Function): void => {

@@ -1,13 +1,28 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { CSVController } from '../controllers/csv.controller';
+import { AppError } from '../models/AppError';
+import { ApiUtility } from '../utilities/api.utility';
 
 export class CSVRoute {
+  private controller: CSVController;
+
   constructor(router: Router) {
     const subRouter = Router();
-    const controller = new CSVController();
+    this.controller = new CSVController();
 
     router.use('/csv', subRouter);
 
-    subRouter.post('/upload/:key', controller.handleFileStream.bind(controller));
+    subRouter.post('/upload/:key', this.handleFileUpload.bind(this));
+  }
+
+  private handleFileUpload(req: Request, res: Response): void {
+    if (ApiUtility.isFileStreamRequest(req) === false) {
+      ApiUtility.handleError(res)(new AppError('Wrong content type'));
+      return;
+    }
+
+    new Promise(this.controller.handleFileStream.bind(this.controller, req))
+      .then(ApiUtility.handleResponse(res))
+      .catch(ApiUtility.handleError(res));
   }
 }
