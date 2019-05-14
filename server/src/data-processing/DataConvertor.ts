@@ -82,7 +82,7 @@ export class DataConvertor {
     return jsonArray;
   }
 
-  public convertFileToJson<T>(path: string, keys: string[]): Promise<T> {
+  public convertFileToJson<T>(path: string, keys: string[]): Promise<T[]> {
     this.log('Reading ' + path);
 
     return new Promise((resolve: Function, reject: Function): void => {

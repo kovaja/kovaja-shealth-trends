@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { FileType } from '../../../shared/api.schemas';
 import { SupportedFileTypes } from '../constants/file-types';
 import { DataConvertor } from '../data-processing/DataConvertor';
+import { HeartRateConvertor } from '../data-processing/heart-rate.convertor';
 import { AppError } from '../models/AppError';
 import { FileUtility } from '../utilities/file.utility';
 
@@ -38,7 +39,7 @@ export class CSVController {
       this.convertor
         .convertFileToJson<FileType>(filePath, SupportedFileTypes[type])
         .then(this.onFileUploadFinished.bind(this, filePath))
-        .then((data: FileType): void => resolve(data));
+        .then((data: FileType[]): void => resolve(HeartRateConvertor.test(data)));
     });
 
     writeStream.on('error', (err: Error): void => reject(err));

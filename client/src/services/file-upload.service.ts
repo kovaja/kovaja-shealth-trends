@@ -24,8 +24,9 @@ export default class FileUploadService {
 
     return Axios(requestConfig)
       .then((r) => {
-        // tslint:disable-next-line:no-console
-        console.log(r.data);
+        // averageRate: Math.floor(avg * 100) / 100,
+        // numberOfRecords: rawData.length
+        alert('Average rate ' + r.data.averageRate + ' from ' + r.data.numberOfRecords + ' records');
         return r.data;
       });
   }
