@@ -46,8 +46,8 @@ class Homepage extends Component<IHompageProps, IHompageState> {
 
   public onPingClick = () => {
     Axios.get('/api/ping')
-      .then((r) => console.log(r.data))
-      .catch((e) => console.log('Boo boo', e));
+      .then((r) => alert(r.data))
+      .catch((e) => alert(e.message));
   }
 
   public onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {

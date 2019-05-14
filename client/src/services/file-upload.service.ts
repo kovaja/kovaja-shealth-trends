@@ -23,6 +23,7 @@ export default class FileUploadService {
 
     return Axios(requestConfig)
       .then((r) => {
+        // tslint:disable-next-line:no-console
         console.log(r.data);
       });
   }
