@@ -1,14 +1,17 @@
-import { Request, Response } from 'express';
 import { FileUtility } from '../utilities/file.utility';
 
+export interface IUserKeyData {
+  userKey: number;
+}
+
 export class UserController {
-  public generateUserKey(req: Request, res: Response): void {
+  public generateUserKey(): Promise<IUserKeyData> {
     const key = new Date().getTime() * Math.floor(Math.random() * 1000);
 
-    const sendKey = (): void => {
-      res.status(200).send({ userKey: key });
+    const mapToData = (): IUserKeyData => {
+      return { userKey: key };
     };
 
-    FileUtility.initializeUserFolder(key).then(sendKey);
+    return FileUtility.initializeUserFolder(key).then(mapToData);
   }
 }

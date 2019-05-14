@@ -1,13 +1,21 @@
-import { Router } from 'express';
+import { Response, Router } from 'express';
 import { UserController } from '../controllers/user.controller';
+import { ApiUtility } from '../utilities/api.utility';
 
 export class UserRoute {
+  private controller: UserController;
   constructor(router: Router) {
     const subRouter = Router();
-    const controller = new UserController();
+    this.controller = new UserController();
 
     router.use('/user', subRouter);
 
-    subRouter.get('/init', controller.generateUserKey.bind(controller));
+    subRouter.get('/init', this.handleUserInit.bind(this));
+  }
+
+  private handleUserInit(req: Request, res: Response): void {
+    this.controller.generateUserKey()
+      .then(ApiUtility.handleResponse(res))
+      .catch(ApiUtility.handleError(res));
   }
 }
