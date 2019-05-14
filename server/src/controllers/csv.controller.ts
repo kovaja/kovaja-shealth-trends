@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import * as fs from 'fs';
+import { FileType } from '../../../shared/api.schemas';
 import { SupportedFileTypes } from '../constants/file-types';
 import { DataConvertor } from '../data-processing/DataConvertor';
 import { AppError } from '../models/AppError';
@@ -12,7 +13,7 @@ export class CSVController {
     this.convertor = new DataConvertor();
   }
 
-  private onFileUploadFinished(csvPath: string, data: object): Promise<object> {
+  private onFileUploadFinished(csvPath: string, data: FileType): Promise<FileType> {
     const jsonPath = csvPath.replace('.csv', '.json');
 
     return FileUtility.writeJSON(jsonPath, data)
@@ -24,7 +25,7 @@ export class CSVController {
     const userKey = req.params['key'];
     const type = req.params['type'];
 
-    if (SupportedFileTypes[type] !== true) {
+    if (Array.isArray(SupportedFileTypes[type]) === false) {
       reject(new AppError('Unknown file type'));
     }
 
@@ -35,9 +36,9 @@ export class CSVController {
 
     writeStream.on('finish', (): void => {
       this.convertor
-        .convertFileToJson<object>(filePath)
+        .convertFileToJson<FileType>(filePath, SupportedFileTypes[type])
         .then(this.onFileUploadFinished.bind(this, filePath))
-        .then((data: object): void => resolve(data));
+        .then((data: FileType): void => resolve(data));
     });
 
     writeStream.on('error', (err: Error): void => reject(err));

@@ -1,4 +1,5 @@
 import Axios, { AxiosRequestConfig } from 'axios';
+import { FileType } from '../../../shared/api.schemas';
 
 export default class FileUploadService {
 
@@ -7,7 +8,7 @@ export default class FileUploadService {
     type: string,
     userKey: number,
     progressCallback: (event: ProgressEvent) => void
-  ): Promise<any> {
+  ): Promise<FileType> {
 
     const uploadUrl = '/api/csv/upload/' + type + '/' + userKey;
 
@@ -25,6 +26,7 @@ export default class FileUploadService {
       .then((r) => {
         // tslint:disable-next-line:no-console
         console.log(r.data);
+        return r.data;
       });
   }
 }
