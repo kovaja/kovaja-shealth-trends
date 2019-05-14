@@ -1,8 +1,5 @@
+import { IUserKeyData } from '../../../shared/api.schemas';
 import { FileUtility } from '../utilities/file.utility';
-
-export interface IUserKeyData {
-  userKey: number;
-}
 
 export class UserController {
   public generateUserKey(): Promise<IUserKeyData> {
