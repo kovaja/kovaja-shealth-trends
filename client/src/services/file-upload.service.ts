@@ -23,7 +23,8 @@ export default class FileUploadService {
 
     return Axios(requestConfig)
       .then((r) => {
-        alert('Average rate ' + r.data.averageRate + ' from ' + r.data.numberOfRecords + ' records');
+        const data: IHeartRateOutputData = r.data;
+        alert('Average rate ' + data.averageRate + ' from ' + data.numberOfRecords + ' records');
         return r.data;
       });
   }

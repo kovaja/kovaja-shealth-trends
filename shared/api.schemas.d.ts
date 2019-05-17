@@ -19,6 +19,7 @@ export interface IWeekDayAverageData {
 }
 
 export interface IHeartRateOutputData {
+  numberOfRecords: number;
   averageRate: number;
   weekDayAverage: IWeekDayAverageData
 }
