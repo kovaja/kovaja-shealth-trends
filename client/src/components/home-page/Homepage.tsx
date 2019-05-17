@@ -4,7 +4,7 @@ import ReactJson from 'react-json-view';
 import { connect, MapStateToProps } from 'react-redux';
 import { IAppState } from '../../reducers/reducer';
 import FileUploadService from '../../services/file-upload.service';
-import { WeekDayAverage } from '../weekDayAverage/WeekDayAverage';
+import { WeekDayAverage } from '../WeekDayAverage/WeekDayAverage';
 import './Homepage.css';
 
 interface IHompageState {

@@ -1,6 +1,6 @@
-import React from 'react';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory';
 import { IWeekDayAverageData, IWeekDayAvgRecord } from '../../../../shared/api.schemas';
+import React from './node_modules/react';
 import './WeekDayAverage.css';
 
 export function WeekDayAverage(): JSX.Element {
