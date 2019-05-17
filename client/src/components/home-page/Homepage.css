@@ -1,5 +1,5 @@
 .full-background {
-  background-image: linear-gradient(to left bottom, #729689, #628283, #5c6d74, #55595f, #484848);
+  /*background-image: linear-gradient(to left bottom, #729689, #628283, #5c6d74, #55595f, #484848);*/
   height: 100vh;
   display: flex;
   justify-content: center;

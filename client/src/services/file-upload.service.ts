@@ -1,16 +1,15 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import { FileType } from '../../../shared/api.schemas';
+import { IHeartRateOutputData } from '../../../shared/api.schemas';
 
 export default class FileUploadService {
 
-  public static uploadFile(
+  public static uploadHeartRate(
     file: File,
-    type: string,
     userKey: number,
     progressCallback: (event: ProgressEvent) => void
-  ): Promise<FileType> {
+  ): Promise<IHeartRateOutputData> {
 
-    const uploadUrl = '/api/csv/upload/' + type + '/' + userKey;
+    const uploadUrl = '/api/csv/upload/heartRate/' + userKey;
 
     const requestConfig: AxiosRequestConfig = {
       data: file,
@@ -24,8 +23,6 @@ export default class FileUploadService {
 
     return Axios(requestConfig)
       .then((r) => {
-        // averageRate: Math.floor(avg * 100) / 100,
-        // numberOfRecords: rawData.length
         alert('Average rate ' + r.data.averageRate + ' from ' + r.data.numberOfRecords + ' records');
         return r.data;
       });

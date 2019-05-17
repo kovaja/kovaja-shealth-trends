@@ -12,16 +12,16 @@ export class CSVRoute {
 
     router.use('/csv', subRouter);
 
-    subRouter.post('/upload/:type/:key', this.handleFileUpload.bind(this));
+    subRouter.post('/upload/heartrate/:key', this.handleHeartRateUpload.bind(this));
   }
 
-  private handleFileUpload(req: Request, res: Response): void {
+  private handleHeartRateUpload(req: Request, res: Response): void {
     if (ApiUtility.isFileStreamRequest(req) === false) {
       ApiUtility.handleError(res)(new AppError('Wrong content type'));
       return;
     }
 
-    new Promise(this.controller.handleFileStream.bind(this.controller, req))
+    new Promise(this.controller.handleHeartRateStream.bind(this.controller, req))
       .then(ApiUtility.handleResponse(res))
       .catch(ApiUtility.handleError(res));
   }

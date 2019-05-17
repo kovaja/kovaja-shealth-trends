@@ -4,6 +4,7 @@ import ReactJson from 'react-json-view';
 import { connect, MapStateToProps } from 'react-redux';
 import { IAppState } from '../../reducers/reducer';
 import FileUploadService from '../../services/file-upload.service';
+import { WeekDayAverage } from '../WeekDayAverage/WeekDayAverage';
 import './Homepage.css';
 
 interface IHompageState {
@@ -33,7 +34,7 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   }
 
   private send(file: File): void {
-    FileUploadService.uploadFile(file, 'heart-rate', this.props.userKey,  this.setProgress.bind(this));
+    FileUploadService.uploadHeartRate(file, this.props.userKey,  this.setProgress.bind(this));
   }
 
   public onButtonClick = () => {
@@ -57,6 +58,8 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   public render(): JSX.Element {
     return (
       <div className="full-background">
+        <WeekDayAverage />
+        <hr />
         {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
         <input type="file" onChange={this.onFileChange} />
         <button type="button" onClick={this.onButtonClick}>SEND</button>

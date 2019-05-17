@@ -1,17 +1,12 @@
-import { IHeartRateData } from '../../../shared/api.schemas';
-
-interface HeartRateResponse {
-  averageRate: number;
-  numberOfRecords: number;
-}
+import { IHeartRateInputData, IHeartRateOutputData } from '../../../shared/api.schemas';
 
 export class HeartRateConvertor {
   private static convertRate(rate: string): number {
     return +rate;
   }
 
-  public static test(rawData: IHeartRateData[]): HeartRateResponse {
-    const totalRate = rawData.reduce((totalRate: number, obj: IHeartRateData): number => {
+  public static test(rawData: IHeartRateInputData[]): IHeartRateOutputData {
+    const totalRate = rawData.reduce((totalRate: number, obj: IHeartRateInputData): number => {
       return totalRate += this.convertRate(obj.heart_rate);
     }, 0);
 
@@ -20,7 +15,10 @@ export class HeartRateConvertor {
 
     return {
       averageRate: Math.floor(avg * 100) / 100,
-      numberOfRecords: rawData.length
+      weekDayAverage: {
+        title: 'Average for week day',
+        dataset: []
+      }
     };
   }
 }

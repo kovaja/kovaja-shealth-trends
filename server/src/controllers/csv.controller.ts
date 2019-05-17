@@ -1,10 +1,10 @@
 import { Request } from 'express';
 import * as fs from 'fs';
-import { FileType } from '../../../shared/api.schemas';
+import { IHeartRateInputData } from '../../../shared/api.schemas';
+import { FileType } from '../constants/enumeration';
 import { SupportedFileTypes } from '../constants/file-types';
 import { DataConvertor } from '../data-processing/DataConvertor';
 import { HeartRateConvertor } from '../data-processing/heart-rate.convertor';
-import { AppError } from '../models/AppError';
 import { FileUtility } from '../utilities/file.utility';
 
 export class CSVController {
@@ -22,13 +22,9 @@ export class CSVController {
       .then(() => data);
   }
 
-  public handleFileStream(req: Request, resolve: Function, reject: Function): void {
+  public handleHeartRateStream(req: Request, resolve: Function, reject: Function): void {
     const userKey = req.params['key'];
-    const type = req.params['type'];
-
-    if (Array.isArray(SupportedFileTypes[type]) === false) {
-      reject(new AppError('Unknown file type'));
-    }
+    const type = FileType.HeartRate;
 
     const filePath = FileUtility.getFilePath(type, userKey, 'csv');
     const writeStream = fs.createWriteStream(filePath);
@@ -37,9 +33,9 @@ export class CSVController {
 
     writeStream.on('finish', (): void => {
       this.convertor
-        .convertFileToJson<FileType>(filePath, SupportedFileTypes[type])
+        .convertFileToJson<IHeartRateInputData>(filePath, SupportedFileTypes[type])
         .then(this.onFileUploadFinished.bind(this, filePath))
-        .then((data: FileType[]): void => resolve(HeartRateConvertor.test(data)));
+        .then((data: IHeartRateInputData[]): void => resolve(HeartRateConvertor.test(data)));
     });
 
     writeStream.on('error', (err: Error): void => reject(err));

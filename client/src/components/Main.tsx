@@ -5,7 +5,7 @@ import { IAction, userKeyReceived } from '../actions/actions';
 import { IAppState } from '../reducers/reducer';
 import UserService from '../services/user.service';
 import Homepage from './home-page/Homepage';
-import { LandingPage } from './ladning-page/Landingpage';
+import { LandingPage } from './Landing-page/Landingpage';
 import './Main.css';
 
 interface IMainProps {
