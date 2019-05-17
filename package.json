@@ -9,7 +9,7 @@
     "server:install": "cd server && npm install --only=dev && npm install && npm run build",
     "server": "cd server && npm run prod",
     "start": "npm run server",
-    "publish": "git push heroku master && heroku logs --tail -a kovaja-shealth-trends",
+    "publish": "git push heroku +master && heroku logs --tail -a kovaja-shealth-trends",
     "server:dev": "cd server && npm run dev",
     "client:dev": "cd client && npm run dev"
   },
