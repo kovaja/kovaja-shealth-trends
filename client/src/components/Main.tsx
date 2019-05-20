@@ -10,12 +10,21 @@ import './Main.css';
 
 interface IMainProps {
   displayHomePage: boolean;
+  userKey: number;
   userKeyReceived?: ActionCreator<IAction>;
 }
 
 class Main extends Component<IMainProps> {
+  private unloadHandler: EventListener;
+
   constructor(props: IMainProps) {
     super(props);
+
+    this.unloadHandler = this.handleBeforeUnload.bind(this);
+  }
+
+  private handleBeforeUnload(): void {
+    UserService.removeUserDataBeforeUnload(this.props.userKey);
   }
 
   private onReceivedKey(key: number): void {
@@ -24,6 +33,12 @@ class Main extends Component<IMainProps> {
 
   public componentDidMount(): void {
     UserService.initUser().then(this.onReceivedKey.bind(this));
+
+    window.addEventListener('beforeunload', this.unloadHandler);
+  }
+
+  public componentWillUnmount(): void {
+    window.removeEventListener('beforeunload', this.unloadHandler);
   }
 
   public render(): JSX.Element {
@@ -52,7 +67,8 @@ class Main extends Component<IMainProps> {
 
 const mapStateToProps: MapStateToProps<IMainProps, any, IAppState> = (state: IAppState): IMainProps => {
   return {
-    displayHomePage: typeof state.userKey === 'number'
+    displayHomePage: typeof state.userKey === 'number',
+    userKey: state.userKey
   };
 };
 
