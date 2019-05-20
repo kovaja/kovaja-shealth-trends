@@ -35,7 +35,6 @@ class Main extends Component<IMainProps> {
         </div>
         <div className="content">
           {this.props.displayHomePage ? <Homepage /> : <LandingPage />}
-
        </div>
         <div className="footer">
           <span>shealth-trends by Kovaja</span>
