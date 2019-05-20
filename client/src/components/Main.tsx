@@ -27,11 +27,25 @@ class Main extends Component<IMainProps> {
   }
 
   public render(): JSX.Element {
-    if (this.props.displayHomePage) {
-      return <Homepage />;
-    }
+    return (
+      <div className="app-container">
+        <div className="header">
+          <h1>shealth trends</h1>
+          <p>by Kovaja</p>
+        </div>
+        <div className="content">
+          {this.props.displayHomePage ? <Homepage /> : <LandingPage />}
 
-    return <LandingPage />;
+       </div>
+        <div className="footer">
+          <span>shealth-trends by Kovaja</span>
+          <span>
+            2019
+            <span className="version">(0.0.1)</span>
+          </span>
+        </div>
+      </div>
+    );
   }
 }
 

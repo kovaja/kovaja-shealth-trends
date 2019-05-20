@@ -26,7 +26,8 @@ export class FileUtility {
           return;
         }
 
-        resolve();
+        // Let's look busy :)
+        setTimeout((): void => resolve(), 2000);
       };
 
       fs.mkdir(AppConfig.FILE_STORAGE_PATH + '/' + key, onDirCreated);
