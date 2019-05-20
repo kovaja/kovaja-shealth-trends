@@ -33,9 +33,11 @@ class Main extends Component<IMainProps> {
           <h1>shealth trends</h1>
           <p>by Kovaja</p>
         </div>
+
         <div className="content">
           {this.props.displayHomePage ? <Homepage /> : <LandingPage />}
-       </div>
+        </div>
+
         <div className="footer">
           <span>shealth-trends by Kovaja</span>
           <span>

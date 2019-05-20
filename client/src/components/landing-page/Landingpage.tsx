@@ -1,7 +1,10 @@
 import React from 'react';
+import './Landingpage.css';
 
 export function LandingPage(): JSX.Element {
   return (
-    <div>This is landing page</div>
+    <div className="landing-page-container">
+      <h2>App is loading...</h2>
+    </div>
   );
 }
