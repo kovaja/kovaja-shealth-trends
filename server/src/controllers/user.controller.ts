@@ -1,5 +1,6 @@
 import { IUserKeyData } from '../../../shared/api.schemas';
 import { FileUtility } from '../utilities/file.utility';
+import { Logger } from '../utilities/logger';
 
 export class UserController {
   public generateUserKey(): Promise<IUserKeyData> {
@@ -13,6 +14,7 @@ export class UserController {
   }
 
   public clearAfterUser(userKey: string): void {
+    Logger.log('Removing data for userkey', userKey);
     FileUtility.clearFolder(userKey);
   }
 }
