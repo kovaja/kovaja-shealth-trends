@@ -7,7 +7,7 @@
   align-items: center;
 }
 
-.column-container {
-  display: flex;
-  justify-content: space-evenly;
+.input-container {
+  width: 100%;
+  text-align: center;
 }

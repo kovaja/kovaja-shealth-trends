@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, { Component } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { ActionCreator, ActionCreatorsMapObject, bindActionCreators } from 'redux';
@@ -10,8 +11,8 @@ import './Main.css';
 
 interface IMainProps {
   isLoading: boolean;
-  userKeyFetch?: ActionCreator<IAction>;
-  userKeyRemove?: ActionCreator<IAction>;
+  dispatchUserKeyFetch?: ActionCreator<IAction>;
+  dispatchUserKeyRemove?: ActionCreator<IAction>;
 }
 
 class Main extends Component<IMainProps> {
@@ -24,11 +25,11 @@ class Main extends Component<IMainProps> {
   }
 
   private handleBeforeUnload(): void {
-    this.props.userKeyRemove();
+    this.props.dispatchUserKeyRemove();
   }
 
   public componentDidMount(): void {
-    this.props.userKeyFetch();
+    this.props.dispatchUserKeyFetch();
 
     window.addEventListener('beforeunload', this.unloadHandler);
   }
@@ -37,12 +38,23 @@ class Main extends Component<IMainProps> {
     window.removeEventListener('beforeunload', this.unloadHandler);
   }
 
+  public onPingClick = () => {
+    Axios.get('/api/ping')
+      .then((r) => alert(r.data))
+      .catch((e) => alert(e.message));
+  }
+
   public render(): JSX.Element {
     return (
       <div className="app-container">
         <div className="header">
-          <h1>shealth trends</h1>
-          <p>by Kovaja</p>
+          <div>
+            <h1>shealth trends</h1>
+            <p>by Kovaja</p>
+          </div>
+          <div>
+            <button className="pure-button" type="button" onClick={this.onPingClick}>PING</button>
+          </div>
         </div>
 
         <div className="content">
@@ -53,7 +65,7 @@ class Main extends Component<IMainProps> {
           <span>shealth-trends by Kovaja</span>
           <span>
             2019
-            <span className="version">(0.0.4)</span>
+            <span className="version">(0.0.5)</span>
           </span>
         </div>
       </div>
@@ -70,8 +82,8 @@ const mapStateToProps: MapStateToProps<IMainProps, any, IAppState> = (state: IAp
 const mapDispatchToProps = (dispatch: any): ActionCreatorsMapObject<IAction> => {
   return bindActionCreators<IAction, ActionCreatorsMapObject<IAction>>(
     {
-      userKeyFetch: UserActionCreators.userKeyFetch,
-      userKeyRemove: UserActionCreators.userKeyRemove
+      dispatchUserKeyFetch: UserActionCreators.userKeyFetch,
+      dispatchUserKeyRemove: UserActionCreators.userKeyRemove
     },
     dispatch
   );

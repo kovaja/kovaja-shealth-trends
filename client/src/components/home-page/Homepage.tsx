@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import React, { ChangeEvent, Component } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { ActionCreator, ActionCreatorsMapObject, bindActionCreators } from 'redux';
@@ -16,7 +15,7 @@ interface IHompageState {
 
 interface IHompageProps {
   heartRateData: IHeartRateOutputData;
-  hearRateDataUploadStart?: ActionCreator<IAction>;
+  dispatchHeartRateDataUploadStart?: ActionCreator<IAction>;
 }
 
 class Homepage extends Component<IHompageProps, IHompageState> {
@@ -41,20 +40,28 @@ class Homepage extends Component<IHompageProps, IHompageState> {
       progressCallback: this.setProgress.bind(this)
     };
 
-    this.props.hearRateDataUploadStart(actionPayload);
+    this.props.dispatchHeartRateDataUploadStart(actionPayload);
   }
 
   private renderChart(): JSX.Element {
-    if (this.props.heartRateData) {
-      return (
-        <WeekDayAverage
-          dataset={this.props.heartRateData.weekDayAverage.dataset}
-          title={this.props.heartRateData.weekDayAverage.title}
-        />
-      );
-    }
+    return (
+      <WeekDayAverage
+        dataset={this.props.heartRateData.weekDayAverage.dataset}
+        title={this.props.heartRateData.weekDayAverage.title}
+      />
+    );
+  }
 
-    return null;
+  private renderInput(): JSX.Element {
+    // TODO: extract as component
+    return (
+      <div className="input-container">
+        < hr />
+        {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
+        < input type="file" onChange={this.onFileChange} />
+        <button type="button" className="pure-button" onClick={this.onButtonClick}>SEND</button>
+      </div>
+    );
   }
 
   public onButtonClick = () => {
@@ -65,12 +72,6 @@ class Homepage extends Component<IHompageProps, IHompageState> {
     this.send(this.file);
   }
 
-  public onPingClick = () => {
-    Axios.get('/api/ping')
-      .then((r) => alert(r.data))
-      .catch((e) => alert(e.message));
-  }
-
   public onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
     this.file = event.target.files[0];
   }
@@ -78,13 +79,7 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   public render(): JSX.Element {
     return (
       <div className="full-background">
-        {this.renderChart()}
-        < hr />
-        {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
-        < input type="file" onChange={this.onFileChange} />
-        <button type="button" onClick={this.onButtonClick}>SEND</button>
-        <hr />
-        <button type="button" onClick={this.onPingClick}>PING</button>
+        {this.props.heartRateData ? this.renderChart() : this.renderInput()}
       </div>
     );
   }
@@ -99,7 +94,7 @@ const mapStateToProps: MapStateToProps<IHompageProps, any, IAppState> = (state: 
 const mapDispatchToProps = (dispatch: any): ActionCreatorsMapObject<IAction> => {
   return bindActionCreators<IAction, ActionCreatorsMapObject<IAction>>(
     {
-      hearRateDataUploadStart: DataActionCreators.hearRateDataUploadStart
+      dispatchHeartRateDataUploadStart: DataActionCreators.hearRateDataUploadStart
     },
     dispatch
   );
