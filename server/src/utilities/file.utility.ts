@@ -18,14 +18,11 @@ export class FileUtility {
     fs.mkdirSync(path);
   }
 
-  public static clearFolder(name): void {
+  public static clearFolder(name: string): void {
     const onClearDone = (error: Error): void => {
       if (error instanceof Error) {
         Logger.error('Cannot clear user data. Path: ', name, error.message);
-        return;
       }
-
-      Logger.error('User data removed');
     };
 
     rimraf(AppConfig.FILE_STORAGE_PATH + '/' + name, onClearDone);

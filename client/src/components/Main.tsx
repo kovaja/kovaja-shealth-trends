@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { ActionCreator, ActionCreatorsMapObject, bindActionCreators } from 'redux';
-import { IAction, userKeyReceived } from '../actions/actions';
+import { IAction } from '../interfaces/action.interface';
 import { IAppState } from '../reducers/reducer';
-import UserService from '../services/user.service';
+import { UserActionCreators } from '../utilities/user-action.creators';
 import Homepage from './home-page/Homepage';
 import { LandingPage } from './landing-page/Landingpage';
 import './Main.css';
 
 interface IMainProps {
-  displayHomePage: boolean;
-  userKey: number;
-  userKeyReceived?: ActionCreator<IAction>;
+  isLoading: boolean;
+  userKeyFetch?: ActionCreator<IAction>;
+  userKeyRemove?: ActionCreator<IAction>;
 }
 
 class Main extends Component<IMainProps> {
@@ -24,15 +24,11 @@ class Main extends Component<IMainProps> {
   }
 
   private handleBeforeUnload(): void {
-    UserService.removeUserDataBeforeUnload(this.props.userKey);
-  }
-
-  private onReceivedKey(key: number): void {
-    this.props.userKeyReceived(key);
+    this.props.userKeyRemove();
   }
 
   public componentDidMount(): void {
-    UserService.initUser().then(this.onReceivedKey.bind(this));
+    this.props.userKeyFetch();
 
     window.addEventListener('beforeunload', this.unloadHandler);
   }
@@ -50,7 +46,7 @@ class Main extends Component<IMainProps> {
         </div>
 
         <div className="content">
-          {this.props.displayHomePage ? <Homepage /> : <LandingPage />}
+          {this.props.isLoading ? <LandingPage /> : <Homepage />}
         </div>
 
         <div className="footer">
@@ -67,14 +63,16 @@ class Main extends Component<IMainProps> {
 
 const mapStateToProps: MapStateToProps<IMainProps, any, IAppState> = (state: IAppState): IMainProps => {
   return {
-    displayHomePage: typeof state.userKey === 'number',
-    userKey: state.userKey
+    isLoading: state.isLoading
   };
 };
 
 const mapDispatchToProps = (dispatch: any): ActionCreatorsMapObject<IAction> => {
   return bindActionCreators<IAction, ActionCreatorsMapObject<IAction>>(
-    { userKeyReceived },
+    {
+      userKeyFetch: UserActionCreators.userKeyFetch,
+      userKeyRemove: UserActionCreators.userKeyRemove
+    },
     dispatch
   );
 };
