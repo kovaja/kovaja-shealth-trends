@@ -1,21 +1,22 @@
 import Axios from 'axios';
 import React, { ChangeEvent, Component } from 'react';
-import ReactJson from 'react-json-view';
 import { connect, MapStateToProps } from 'react-redux';
-import { IHeartRateOutputData, IWeekDayAverageData } from '../../../../shared/api.schemas';
+import { ActionCreator, ActionCreatorsMapObject, bindActionCreators } from 'redux';
+import { IHeartRateOutputData } from '../../../../shared/api.schemas';
+import { IFileUploadActionPayload } from '../../interfaces/action-upload-payload.interface';
+import { IAction } from '../../interfaces/action.interface';
 import { IAppState } from '../../reducers/reducer';
-import FileUploadService from '../../services/file-upload.service';
+import { DataActionCreators } from '../../utilities/data-action.creators';
 import { WeekDayAverage } from '../WeekDayAverage/WeekDayAverage';
 import './Homepage.css';
 
 interface IHompageState {
-  json: object;
   progress: number;
-  data: IWeekDayAverageData;
 }
 
 interface IHompageProps {
-  userKey: number;
+  heartRateData: IHeartRateOutputData;
+  hearRateDataUploadStart?: ActionCreator<IAction>;
 }
 
 class Homepage extends Component<IHompageProps, IHompageState> {
@@ -25,9 +26,7 @@ class Homepage extends Component<IHompageProps, IHompageState> {
     super(props);
 
     this.state = {
-      json: null,
-      progress: 0,
-      data: null
+      progress: 0
     };
   }
 
@@ -36,15 +35,26 @@ class Homepage extends Component<IHompageProps, IHompageState> {
     this.setState({ progress });
   }
 
-  private send(file: File): void {
-    FileUploadService
-      .uploadHeartRate(file, this.props.userKey, this.setProgress.bind(this))
-      .then((data: IHeartRateOutputData) => {
-        this.setState({
-          ...this.state,
-          data: data.weekDayAverage
-        });
-      });
+  private send(fileToSend: File): void {
+    const actionPayload: IFileUploadActionPayload = {
+      file: fileToSend,
+      progressCallback: this.setProgress.bind(this)
+    };
+
+    this.props.hearRateDataUploadStart(actionPayload);
+  }
+
+  private renderChart(): JSX.Element {
+    if (this.props.heartRateData) {
+      return (
+        <WeekDayAverage
+          dataset={this.props.heartRateData.weekDayAverage.dataset}
+          title={this.props.heartRateData.weekDayAverage.title}
+        />
+      );
+    }
+
+    return null;
   }
 
   public onButtonClick = () => {
@@ -68,15 +78,13 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   public render(): JSX.Element {
     return (
       <div className="full-background">
-        {this.state.data ? <WeekDayAverage dataset={this.state.data.dataset} title={this.state.data.title} /> : null}
+        {this.renderChart()}
         < hr />
         {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
         < input type="file" onChange={this.onFileChange} />
         <button type="button" onClick={this.onButtonClick}>SEND</button>
         <hr />
         <button type="button" onClick={this.onPingClick}>PING</button>
-        <hr />
-        {this.state.json ? <ReactJson src={this.state.json} /> : null}
       </div>
     );
   }
@@ -84,8 +92,17 @@ class Homepage extends Component<IHompageProps, IHompageState> {
 
 const mapStateToProps: MapStateToProps<IHompageProps, any, IAppState> = (state: IAppState): IHompageProps => {
   return {
-    userKey: state.userKey
+    heartRateData: state.heartRate.data
   };
 };
 
-export default connect(mapStateToProps)(Homepage);
+const mapDispatchToProps = (dispatch: any): ActionCreatorsMapObject<IAction> => {
+  return bindActionCreators<IAction, ActionCreatorsMapObject<IAction>>(
+    {
+      hearRateDataUploadStart: DataActionCreators.hearRateDataUploadStart
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Homepage);

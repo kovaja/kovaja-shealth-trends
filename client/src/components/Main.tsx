@@ -53,7 +53,7 @@ class Main extends Component<IMainProps> {
           <span>shealth-trends by Kovaja</span>
           <span>
             2019
-            <span className="version">(0.0.2)</span>
+            <span className="version">(0.0.3)</span>
           </span>
         </div>
       </div>
