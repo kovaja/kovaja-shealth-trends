@@ -1,9 +1,27 @@
-import { IHeartRateInputData, IHeartRateOutputData, IWeekDayAvgRecord } from '../../../shared/api.schemas';
+import { IHeartRateInputData, IHeartRateOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
 import { Logger } from '../utilities/logger';
 
 export class HeartRateConvertor {
   private static getAverage(total: number, num: number): number {
     return Math.floor((total / num) * 100) / 100;
+  }
+
+  private static getAverageFromArray(values: number[]): number {
+    const sum = values.reduce((s, c) => s += c);
+    return this.getAverage(sum, values.length);
+  }
+
+  private static getMedianFromArray(values: number[]): number {
+    values.sort();
+
+    let index: number;
+
+    if (values.length % 2 === 0) { // even
+      index = values.length / 2;
+      return (values[index] + values[index + 1]) / 2;
+    }
+
+    return values[Math.ceil(values.length / 2)];
   }
 
   private static convertRate(rate: string): number {
@@ -37,13 +55,13 @@ export class HeartRateConvertor {
     let totalRate = 0;
 
     const days = {
-      'Mo': { total: 0, number: 0 },
-      'Tu': { total: 0, number: 0 },
-      'We': { total: 0, number: 0 },
-      'Th': { total: 0, number: 0 },
-      'Fr': { total: 0, number: 0 },
-      'Sa': { total: 0, number: 0 },
-      'Su': { total: 0, number: 0 }
+      'Mo': [],
+      'Tu': [],
+      'We': [],
+      'Th': [],
+      'Fr': [],
+      'Sa': [],
+      'Su': []
     };
 
     rawData.forEach((record: IHeartRateInputData): void => {
@@ -56,31 +74,26 @@ export class HeartRateConvertor {
 
       } else {
 
-        days[day].total += rate;
-        days[day].number += 1;
-
+        days[day].push(rate);
       }
 
       totalRate += rate;
     });
 
-    const dataset = Object.keys(days).map((dayName: string): IWeekDayAvgRecord => {
+    const dataset = Object.keys(days).map((dayName: string): IWeekDayRecord => {
       const dayData = days[dayName];
-      const avg = this.getAverage(dayData.total, dayData.number);
 
       return {
         day: dayName as any,
-        value: avg
+        average: this.getAverageFromArray(dayData),
+        median: this.getMedianFromArray(dayData)
       };
     });
 
     return {
       numberOfRecords: rawData.length,
       averageRate: this.getAverage(totalRate, rawData.length),
-      weekDayAverage: {
-        title: 'Average for week day',
-        dataset: dataset
-      }
+      weekDay: dataset
     };
   }
 }

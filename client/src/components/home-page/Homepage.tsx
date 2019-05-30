@@ -46,8 +46,9 @@ class Homepage extends Component<IHompageProps, IHompageState> {
   private renderChart(): JSX.Element {
     return (
       <WeekDayAverage
-        dataset={this.props.heartRateData.weekDayAverage.dataset}
-        title={this.props.heartRateData.weekDayAverage.title}
+        averageRate={this.props.heartRateData.averageRate}
+        numberOfRecords={this.props.heartRateData.numberOfRecords}
+        weekDay={this.props.heartRateData.weekDay}
       />
     );
   }

@@ -8,18 +8,14 @@ export interface IHeartRateInputData {
   time_offset: string
 }
 
-export interface IWeekDayAvgRecord {
+export interface IWeekDayRecord {
   day: 'Mo' | 'Tu' | 'We' | 'Th' | 'Fr' | 'Sa' | 'Su';
-  value: number;
-}
-
-export interface IWeekDayAverageData {
-  title: string;
-  dataset: IWeekDayAvgRecord[];
+  average: number;
+  median: number;
 }
 
 export interface IHeartRateOutputData {
   numberOfRecords: number;
   averageRate: number;
-  weekDayAverage: IWeekDayAverageData
+  weekDay: IWeekDayRecord[];
 }
