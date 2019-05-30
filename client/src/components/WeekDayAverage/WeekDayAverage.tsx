@@ -4,8 +4,12 @@ import { IHeartRateOutputData, IWeekDayRecord } from '../../../../shared/api.sch
 import './WeekDayAverage.css';
 
 export function WeekDayAverage(props: IHeartRateOutputData): JSX.Element {
-  const getLabel = (d: IWeekDayRecord): string => {
+  const getAverageLabel = (d: IWeekDayRecord): string => {
     return String(d.average);
+  };
+
+  const getMedianabel = (d: IWeekDayRecord): string => {
+    return String(d.median);
   };
 
   return (
@@ -25,7 +29,7 @@ export function WeekDayAverage(props: IHeartRateOutputData): JSX.Element {
           data={props.weekDay}
           x="day"
           y="average"
-          labels={getLabel}
+          labels={getAverageLabel}
         />
         <VictoryScatter
           style={{ data: { fill: '#de1738' }, labels: { fontSize: 5 } }}
@@ -33,7 +37,7 @@ export function WeekDayAverage(props: IHeartRateOutputData): JSX.Element {
           data={props.weekDay}
           x="day"
           y="median"
-          labels={getLabel}
+          labels={getMedianabel}
         />
       </VictoryChart>
     </div>
