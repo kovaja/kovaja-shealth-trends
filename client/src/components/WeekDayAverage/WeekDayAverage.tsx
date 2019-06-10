@@ -20,7 +20,7 @@ export function WeekDayAverage(props: IHeartRateOutputData): JSX.Element {
       <VictoryChart
         theme={VictoryTheme.material}
         domainPadding={10}
-        domain={{ y: [60, 80] }}
+        domain={{ y: [50, 80] }}
         height={300}
       >
         <VictoryScatter

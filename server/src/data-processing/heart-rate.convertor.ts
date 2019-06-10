@@ -1,4 +1,5 @@
 import { IHeartRateInputData, IHeartRateOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
+import { AppError } from '../models/AppError';
 import { Logger } from '../utilities/logger';
 
 export class HeartRateConvertor {
@@ -7,7 +8,7 @@ export class HeartRateConvertor {
   }
 
   private static getAverageFromArray(values: number[]): number {
-    const sum = values.reduce((s, c) => s += c);
+    const sum = values.reduce((s, c) => s += c, 0);
     return this.getAverage(sum, values.length);
   }
 
@@ -28,8 +29,25 @@ export class HeartRateConvertor {
     return +rate;
   }
 
+  /**
+   * From android: 2019-03-09 18:22:14.201
+   * From ios: "13/02/2019, 19:15:18"
+   */
   private static mapDateToDay(dateString: string): string {
-    const dayNum = new Date(dateString).getDay();
+    let date: Date;
+
+    if (dateString.includes('/')) {
+      const parts = dateString.split(',');
+      date = new Date(parts[0].split('/').reverse().join('-') + parts[1]);
+    } else {
+      date = new Date(dateString);
+    }
+
+    const dayNum = date.getDay();
+
+    if (isNaN(dayNum)) {
+      throw new AppError('Invalid date ' + dateString);
+    }
 
     switch (dayNum) {
       case 1:
