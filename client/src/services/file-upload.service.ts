@@ -24,6 +24,7 @@ export default class FileUploadService {
     return Axios(requestConfig)
       .then((r) => {
         return r.data;
-      });
+      })
+      .catch((e: Error) => alert(e.message)); // TODO
   }
 }

@@ -35,7 +35,8 @@ export class CSVController {
       this.convertor
         .convertFileToJson<IHeartRateInputData>(filePath, SupportedFileTypes[type])
         .then(this.onFileUploadFinished.bind(this, filePath))
-        .then((data: IHeartRateInputData[]): void => resolve(HeartRateConvertor.processData(data)));
+        .then((data: IHeartRateInputData[]): void => resolve(HeartRateConvertor.processData(data)))
+        .catch(reject as any);
     });
 
     writeStream.on('error', (err: Error): void => reject(err));
