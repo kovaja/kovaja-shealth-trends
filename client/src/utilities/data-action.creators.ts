@@ -4,9 +4,9 @@ import { IFileUploadActionPayload } from '../interfaces/action-upload-payload.in
 import { IAction } from '../interfaces/action.interface';
 
 export class DataActionCreators {
-  public static hearRateDataUploadStart(actionPayload: IFileUploadActionPayload): IAction {
+  public static dataUploadStart(actionType: ActionType, actionPayload: IFileUploadActionPayload): IAction {
     return {
-      type: ActionType.HeartRateDataUploadStart,
+      type: actionType,
       payload: actionPayload
     };
   }

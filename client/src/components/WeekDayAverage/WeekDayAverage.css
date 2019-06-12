@@ -1,5 +1,14 @@
 .chart-container {
-  width: 100%;
-  text-align: center;
   padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chart-container .chart-info {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.chart-container .chart-data {
+  flex-grow: 1;
 }

@@ -8,6 +8,7 @@ import UserService from '../services/user.service';
 import { store } from '../store';
 import { DataActionCreators } from '../utilities/data-action.creators';
 import { UserActionCreators } from '../utilities/user-action.creators';
+import { ViewActionCreators } from '../utilities/view-action.creators';
 
 export interface IAppState {
   userKey: number;
@@ -34,6 +35,7 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
     case ActionType.UserKeyFetch:
       const dispatchReceived = (key: number): void => {
         store.dispatch(UserActionCreators.userKeyReceived(key));
+        store.dispatch(ViewActionCreators.changeActiveView(ViewType.HeartRate));
       };
 
       UserService.initUser()
@@ -48,7 +50,6 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
       return {
         ...state,
         userKey: action.payload,
-        activeView: ViewType.HeartRate,
         isLoading: false
       };
 
