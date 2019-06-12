@@ -1,0 +1,3 @@
+.pure-menu-selected.pure-menu-item-dark .pure-menu-link:not(:focus) {
+  color: #fff;
+}

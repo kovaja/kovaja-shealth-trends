@@ -1,5 +1,6 @@
 import { IHeartRateOutputData } from '../../../shared/api.schemas';
 import { ActionType } from '../enumerations/action-type';
+import { ViewType } from '../enumerations/view-type';
 import { IFileUploadActionPayload } from '../interfaces/action-upload-payload.interface';
 import { IAction } from '../interfaces/action.interface';
 import FileUploadService from '../services/file-upload.service';
@@ -11,6 +12,7 @@ import { UserActionCreators } from '../utilities/user-action.creators';
 export interface IAppState {
   userKey: number;
   isLoading: boolean;
+  activeView: ViewType;
   heartRate: {
     data: IHeartRateOutputData;
     error: string;
@@ -20,6 +22,7 @@ export interface IAppState {
 const defaultState: IAppState = {
   userKey: null,
   isLoading: false,
+  activeView: null,
   heartRate: {
     data: null,
     error: null
@@ -45,6 +48,7 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
       return {
         ...state,
         userKey: action.payload,
+        activeView: ViewType.HeartRate,
         isLoading: false
       };
 
@@ -79,6 +83,12 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
           data: action.payload,
           error: null
         }
+      };
+
+    case ActionType.ActiveViewChange:
+      return {
+        ...state,
+        activeView: action.payload
       };
 
     default: return {

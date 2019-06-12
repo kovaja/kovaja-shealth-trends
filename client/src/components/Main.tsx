@@ -8,6 +8,7 @@ import { UserActionCreators } from '../utilities/user-action.creators';
 import Homepage from './home-page/Homepage';
 import { LandingPage } from './landing-page/Landingpage';
 import './Main.css';
+import Menu from './menu/Menu';
 
 interface IMainProps {
   isLoading: boolean;
@@ -48,13 +49,15 @@ class Main extends Component<IMainProps> {
     return (
       <div className="app-container">
         <div className="header">
-          <div>
-            <h1>shealth trends</h1>
-            <p>by Kovaja</p>
+          <div className="header-row">
+            <div>
+              <h1>shealth trends <span>by Kovaja</span></h1>
+            </div>
+            <div>
+              <button className="pure-button" type="button" onClick={this.onPingClick}>PING</button>
+            </div>
           </div>
-          <div>
-            <button className="pure-button" type="button" onClick={this.onPingClick}>PING</button>
-          </div>
+          <Menu />
         </div>
 
         <div className="content">
@@ -65,7 +68,7 @@ class Main extends Component<IMainProps> {
           <span>shealth-trends by Kovaja</span>
           <span>
             2019
-            <span className="version">(0.0.8)</span>
+            <span className="version">(0.0.9)</span>
           </span>
         </div>
       </div>
