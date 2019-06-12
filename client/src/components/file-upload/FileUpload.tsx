@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, FormEvent } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { ActionCreator, ActionCreatorsMapObject, bindActionCreators } from 'redux';
 import { ActionType } from '../../enumerations/action-type';
@@ -44,7 +44,9 @@ class FileUpload extends Component<IFileUploadProps, IFileUploadState> {
     this.props.dispatchFileUploadStart(this.props.uploadType, actionPayload);
   }
 
-  public onButtonClick = () => {
+  private onButtonClick = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if ((this.file instanceof File) === false) {
       return;
     }
@@ -52,17 +54,41 @@ class FileUpload extends Component<IFileUploadProps, IFileUploadState> {
     this.send(this.file);
   }
 
-  public onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  private onFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
     this.file = event.target.files[0];
+  }
+
+  private renderForm(): JSX.Element {
+    return (
+      <form className="pure-form pure-form-stacked" onSubmit={this.onButtonClick}>
+        <fieldset>
+          <legend>
+            Upload CSV file for {this.props.title}
+          </legend>
+
+          <input type="file" onChange={this.onFileChange} className="custom-file-input" />
+
+          <button type="submit" className="pure-button pure-button-primary">
+            SEND
+          </button>
+        </fieldset>
+      </form>
+    );
+  }
+
+  private renderProgress(): JSX.Element {
+    return (
+      <div>
+        <h4>Loading...</h4>
+        <p>{this.state.progress}%</p>
+      </div>
+    );
   }
 
   public render(): JSX.Element {
     return (
       <div className="input-container">
-        < hr />
-        {this.state.progress > 0 ? <p>{this.state.progress}</p> : null}
-        < input type="file" onChange={this.onFileChange} />
-        <button type="button" className="pure-button" onClick={this.onButtonClick}>SEND</button>
+        {this.state.progress > 0 ? this.renderProgress() : this.renderForm()}
       </div>
     );
   }

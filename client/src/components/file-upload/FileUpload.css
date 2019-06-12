@@ -1,4 +1,35 @@
 .input-container {
-  width: 100%;
   text-align: center;
+  padding: 15px 0;
+}
+
+.custom-file-input {
+  padding: 10px;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.custom-file-input::before {
+  content: 'Select file';
+  display: inline-block;
+  border: 1px solid #999;
+  border-radius: 2px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  text-shadow: 1px 1px #fff;
+  font-size: 12px;
+}
+.custom-file-input:hover::before {
+  border-color: black;
+}
+.custom-file-input:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+button[type="submit"] {
+  margin-top: 15px;
 }

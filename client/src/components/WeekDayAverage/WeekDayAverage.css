@@ -7,6 +7,7 @@
 .chart-container .chart-info {
   text-align: center;
   flex-grow: 1;
+  flex-basis: 100%;
 }
 
 .chart-container .chart-data {
