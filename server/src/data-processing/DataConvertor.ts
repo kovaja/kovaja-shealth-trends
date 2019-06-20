@@ -1,5 +1,4 @@
 import * as CSV from 'csvtojson';
-import CSVError from 'csvtojson/v2/CSVError';
 import * as fs from 'fs';
 import { AppError } from '../models/AppError';
 import { Logger } from '../utilities/logger';
@@ -43,22 +42,36 @@ export class DataConvertor {
     return objArray.map(removeUnusedKeys);
   }
 
-  public convertFileToJson<T>(path: string, keys: string[]): Promise<T[]> {
-    this.log('Reading ' + path);
-
-    return new Promise((resolve: Function, reject: Function): void => {
-      fs.readFile(path, 'utf8', (err: Error, data: string) => {
+  private readFile(path: string): Promise<string> {
+    return new Promise((resolve: Function, reject: Function) => {
+      fs.readFile(path, 'utf8', (err: Error, data: string): void => {
         if (err) {
           return reject(err);
         }
 
-
-        CSV().fromString(this.normalizeFirstRow(data))
-          .subscribe(
-            (arrayOfDataObjects) => resolve(this.reduceKeys<T>(keys, arrayOfDataObjects)),
-            reject as (err: CSVError) => void
-          );
+        resolve(data);
       });
     });
+  }
+
+  private parseStringCSV(data: string): Promise<object[]> {
+    const normalizedData = this.normalizeFirstRow(data);
+
+    return new Promise((resolve: Function, reject: Function) => {
+      CSV()
+        .fromString(normalizedData)
+        .then(
+          resolve as any,
+          reject as any
+        );
+    });
+  }
+
+  public convertFileToJson<T>(path: string, keys: string[]): Promise<T[]> {
+    this.log('Reading ' + path);
+
+    return this.readFile(path)
+      .then(this.parseStringCSV.bind(this))
+      .then(this.reduceKeys.bind(this, keys)) as any;
   }
 }
