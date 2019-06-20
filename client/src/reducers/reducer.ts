@@ -1,4 +1,5 @@
-import { IHeartRateOutputData } from '../../../shared/api.schemas';
+import { AxiosError } from 'axios';
+import { IErrorResponse, IHeartRateOutputData } from '../../../shared/api.schemas';
 import { ActionType } from '../enumerations/action-type';
 import { ViewType } from '../enumerations/view-type';
 import { IFileUploadActionPayload } from '../interfaces/action-upload-payload.interface';
@@ -7,6 +8,7 @@ import FileUploadService from '../services/file-upload.service';
 import UserService from '../services/user.service';
 import { store } from '../store';
 import { DataActionCreators } from '../utilities/data-action.creators';
+import { ErrorActionCreators } from '../utilities/error-action.creators';
 import { UserActionCreators } from '../utilities/user-action.creators';
 import { ViewActionCreators } from '../utilities/view-action.creators';
 
@@ -62,19 +64,23 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
 
     case ActionType.HeartRateDataUploadStart:
       const dispatchFinished = (data: IHeartRateOutputData): void => {
-        store.dispatch(DataActionCreators.hearRateDataUploadFinished(data));
+        store.dispatch(DataActionCreators.heartRateDataUploadFinished(data));
       };
+
+      const dispatchError = (error: AxiosError): void => {
+        const response: IErrorResponse = error.response.data;
+        store.dispatch(ErrorActionCreators.apiErrorReceived(ActionType.HeartRateDataUploadError, response.error));
+      };
+
       const uploadPaylod = action.payload as IFileUploadActionPayload;
+
       FileUploadService
         .uploadHeartRate(uploadPaylod.file, state.userKey, uploadPaylod.progressCallback)
-        .then(dispatchFinished);
+        .then(dispatchFinished)
+        .catch(dispatchError);
 
       return {
-        ...state,
-        heartRate: {
-          data: null,
-          error: null
-        }
+        ...state
       };
 
     case ActionType.HeartRateDataUploadFinished:
@@ -85,7 +91,23 @@ const reducer = (state: IAppState = defaultState, action: IAction): IAppState =>
           error: null
         }
       };
+    case ActionType.HeartRateDataUploadError:
+      return {
+        ...state,
+        heartRate: {
+          data: null,
+          error: action.payload
+        }
+      };
 
+    case ActionType.HeartRateDataReset:
+      return {
+        ...state,
+        heartRate: {
+          data: null,
+          error: null
+        }
+      };
     case ActionType.ActiveViewChange:
       return {
         ...state,

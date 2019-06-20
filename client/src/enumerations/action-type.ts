@@ -4,5 +4,7 @@ export enum ActionType {
   UserKeyRemove = 'USER_KEY_REMOVE',
   HeartRateDataUploadStart = 'HEART_RATE_DATA_UPLOAD_START',
   HeartRateDataUploadFinished = 'HEART_RATE_DATA_UPLOAD_FINISHED',
+  HeartRateDataUploadError = 'HEART_RATE_DATA_UPLOAD_ERROR',
+  HeartRateDataReset = 'HEART_RATE_DATA_RESET',
   ActiveViewChange = 'ACTIVE_VIEW_CHANGE'
 }

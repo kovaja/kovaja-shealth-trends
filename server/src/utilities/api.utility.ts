@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { IErrorResponse } from '../../../shared/api.schemas';
 import { Constants } from '../constants/constants';
 import { AppError } from '../models/AppError';
 import { Logger } from './logger';
@@ -16,7 +17,9 @@ export class ApiUtility {
       const status = isAppError ? 400 : 500;
       const message = isAppError ? error.message : 'Ups, something went wrong';
 
-      res.status(status).send({ error: message });
+      const errorResponse: IErrorResponse = { error: message };
+
+      res.status(status).send(errorResponse);
     };
   }
 

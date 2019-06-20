@@ -24,7 +24,7 @@ export class DataConvertor {
 
   private reduceKeys<T>(keys: string[], objArray: object[]): T[] {
     if (this.isValidData(objArray[0], keys) === false) {
-      throw new AppError('Couldnt parse data, make sure your data has these values: ' + keys.join(','));
+      throw new AppError('Unable to parse data, make sure your data has these values: ' + keys.join(','));
     }
 
     const toReducedObject = (record: object, result: T, k: string): T => {

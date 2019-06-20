@@ -19,3 +19,7 @@ export interface IHeartRateOutputData {
   averageRate: number;
   weekDay: IWeekDayRecord[];
 }
+
+export interface IErrorResponse {
+  error: string;
+}
