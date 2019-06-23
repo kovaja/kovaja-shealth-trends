@@ -1,4 +1,4 @@
-import { ISleepInputData, ISleepOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
+import { ISleepInputData, IWeekDayOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
 import { Logger } from '../utilities/logger';
 import { CommonConvertor } from './common.convertor';
 
@@ -7,7 +7,7 @@ export class SleepConvertor {
     return (end.getTime() - start.getTime()) / (60 * 60 * 1000);
   }
 
-  public static processData(rawData: ISleepInputData[]): ISleepOutputData {
+  public static processData(rawData: ISleepInputData[]): IWeekDayOutputData {
     let totalHrs = 0;
 
     const days = {
@@ -34,7 +34,7 @@ export class SleepConvertor {
 
       } else {
 
-        days[day].push(hrs);
+        days[day].push(+hrs.toPrecision(2));
       }
 
       totalHrs += hrs;
@@ -52,8 +52,9 @@ export class SleepConvertor {
 
     return {
       numberOfRecords: rawData.length,
-      averageSleep: CommonConvertor.getAverage(totalHrs, rawData.length),
-      weekDay: dataset
+      averageRate: CommonConvertor.getAverage(totalHrs, rawData.length),
+      weekDay: dataset,
+      yDomain: [0, 8]
     };
   }
 }

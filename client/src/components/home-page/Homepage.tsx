@@ -6,6 +6,7 @@ import { IAction } from '../../interfaces/action.interface';
 import { IAppState } from '../../reducers/reducer';
 import { DataActionCreators } from '../../utilities/data-action.creators';
 import HeartRate from '../heart-rate/HeartRate';
+import Sleep from '../sleep/Sleep';
 import './Homepage.css';
 
 interface IHompageProps {
@@ -23,6 +24,8 @@ class Homepage extends Component<IHompageProps> {
     switch (this.props.activeView) {
       case ViewType.HeartRate:
         return <HeartRate />;
+      case ViewType.Sleep:
+        return <Sleep />;
       default:
         return (<p>We are sorry, but this view is not implemented yet.</p>);
     }
@@ -31,8 +34,8 @@ class Homepage extends Component<IHompageProps> {
   private renderTryAgainButton(): JSX.Element {
     return (
       <button className="pure-button pure-button-primary" onClick={this.onTryAgainClick}>
-          Try again
-        </button>
+        Try again
+      </button>
     );
   }
 
@@ -46,10 +49,15 @@ class Homepage extends Component<IHompageProps> {
   }
 }
 
+const displayTryAgain = (state: IAppState): boolean => {
+  return state.heartRate.data !== null || state.heartRate.error !== null ||
+  state.sleep.data !== null || state.sleep.error !== null;
+};
+
 const mapStateToProps: MapStateToProps<IHompageProps, any, IAppState> = (state: IAppState): IHompageProps => {
   return {
     activeView: state.activeView,
-    displayTryAgain: state.heartRate.data !== null || state.heartRate.error !== null
+    displayTryAgain: displayTryAgain(state)
   };
 };
 

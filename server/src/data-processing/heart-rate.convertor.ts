@@ -1,4 +1,4 @@
-import { IHeartRateInputData, IHeartRateOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
+import { IHeartRateInputData, IWeekDayOutputData, IWeekDayRecord } from '../../../shared/api.schemas';
 import { Logger } from '../utilities/logger';
 import { CommonConvertor } from './common.convertor';
 
@@ -12,7 +12,7 @@ export class HeartRateConvertor {
     return CommonConvertor.mapDateToDay(date);
   }
 
-  public static processData(rawData: IHeartRateInputData[]): IHeartRateOutputData {
+  public static processData(rawData: IHeartRateInputData[]): IWeekDayOutputData {
     let totalRate = 0;
 
     const days = {
@@ -54,7 +54,8 @@ export class HeartRateConvertor {
     return {
       numberOfRecords: rawData.length,
       averageRate: CommonConvertor.getAverage(totalRate, rawData.length),
-      weekDay: dataset
+      weekDay: dataset,
+      yDomain: [50, 80]
     };
   }
 }

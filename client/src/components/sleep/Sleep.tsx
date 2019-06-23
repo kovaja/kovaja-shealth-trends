@@ -8,34 +8,33 @@ import { ErrorMessage } from '../error/ErrorMessage';
 import FileUpload from '../file-upload/FileUpload';
 import { WeekDayAverage } from '../WeekDayAverage/WeekDayAverage';
 
-interface IHeartRateProps {
+interface ISleepProps {
   data: IWeekDayOutputData;
   error: string;
 }
 
-function HeartRate(props: IHeartRateProps) {
+function Sleep(props: ISleepProps) {
   if (props.error) {
     return <ErrorMessage message={props.error} />;
   }
 
   if (!props.data) {
-    return <FileUpload uploadType={ActionType.HeartRateDataUploadStart} />;
+    return <FileUpload uploadType={ActionType.SleepDataUploadStart} />;
   }
 
   return (
     <WeekDayAverage
       data={props.data}
-      title={ViewTypeLabel[ViewType.HeartRate]}
+      title={ViewTypeLabel[ViewType.Sleep]}
     />
-
   );
 }
 
-const mapStateToProps: MapStateToProps<IHeartRateProps, any, IAppState> = (state: IAppState): IHeartRateProps => {
+const mapStateToProps: MapStateToProps<ISleepProps, any, IAppState> = (state: IAppState): ISleepProps => {
   return {
-    data: state.heartRate.data,
-    error: state.heartRate.error
+    data: state.sleep.data,
+    error: state.sleep.error
   };
 };
 
-export default connect(mapStateToProps)(HeartRate);
+export default connect(mapStateToProps)(Sleep);

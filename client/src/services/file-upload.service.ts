@@ -1,18 +1,18 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import { IHeartRateOutputData } from '../../../shared/api.schemas';
+import { IWeekDayOutputData } from '../../../shared/api.schemas';
 
 export default class FileUploadService {
-  private static getUploadUrl(userKey: number): string {
-    return `/api/csv/upload/${userKey}`;
+  private static getUploadUrl(userKey: number, type: string): string {
+    return `/api/csv/upload/${userKey}/${type}`;
   }
 
-  public static uploadHeartRate(
+  private static upload<T>(
     file: File,
     userKey: number,
-    progressCallback: (event: ProgressEvent) => void
-  ): Promise<IHeartRateOutputData> {
-
-    const uploadUrl = this.getUploadUrl(userKey) + '/heartRate';
+    progressCallback: (event: ProgressEvent) => void,
+    type: string
+  ): Promise<IWeekDayOutputData> {
+    const uploadUrl = this.getUploadUrl(userKey, type);
 
     const requestConfig: AxiosRequestConfig = {
       data: file,
@@ -28,5 +28,31 @@ export default class FileUploadService {
       .then((r) => {
         return r.data;
       });
+  }
+
+  public static uploadHeartRate(
+    file: File,
+    userKey: number,
+    progressCallback: (event: ProgressEvent) => void
+  ): Promise<IWeekDayOutputData> {
+    return this.upload(
+      file,
+      userKey,
+      progressCallback,
+      'heartRate'
+    );
+  }
+
+  public static uploadSleep(
+    file: File,
+    userKey: number,
+    progressCallback: (event: ProgressEvent) => void
+  ): Promise<IWeekDayOutputData> {
+    return this.upload(
+      file,
+      userKey,
+      progressCallback,
+      'sleep'
+    );
   }
 }

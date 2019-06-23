@@ -19,16 +19,11 @@ export interface IWeekDayRecord {
   median: number;
 }
 
-export interface IHeartRateOutputData {
+export interface IWeekDayOutputData {
   numberOfRecords: number;
   averageRate: number;
   weekDay: IWeekDayRecord[];
-}
-
-export interface ISleepOutputData {
-  numberOfRecords: number;
-  averageSleep: number;
-  weekDay: IWeekDayRecord[];
+  yDomain: number[];
 }
 
 export interface IErrorResponse {
