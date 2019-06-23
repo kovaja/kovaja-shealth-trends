@@ -1,5 +1,6 @@
 export enum FileType {
-  HeartRate = 'heart-rate'
+  HeartRate = 'heart-rate',
+  Sleep = 'sleep'
 }
 
 export enum FieldType {

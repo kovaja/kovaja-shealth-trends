@@ -3,9 +3,14 @@ export interface IUserKeyData {
 }
 
 export interface IHeartRateInputData {
-  heart_rate: string,
-  create_time: string,
-  time_offset: string
+  heart_rate: string;
+  create_time: string;
+  time_offset: string;
+}
+
+export interface ISleepInputData {
+  start_time: string;
+  create_time: string;
 }
 
 export interface IWeekDayRecord {
@@ -17,6 +22,12 @@ export interface IWeekDayRecord {
 export interface IHeartRateOutputData {
   numberOfRecords: number;
   averageRate: number;
+  weekDay: IWeekDayRecord[];
+}
+
+export interface ISleepOutputData {
+  numberOfRecords: number;
+  averageSleep: number;
   weekDay: IWeekDayRecord[];
 }
 

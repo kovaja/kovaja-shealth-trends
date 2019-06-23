@@ -2,6 +2,9 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import { IHeartRateOutputData } from '../../../shared/api.schemas';
 
 export default class FileUploadService {
+  private static getUploadUrl(userKey: number): string {
+    return `/api/csv/upload/${userKey}`;
+  }
 
   public static uploadHeartRate(
     file: File,
@@ -9,7 +12,7 @@ export default class FileUploadService {
     progressCallback: (event: ProgressEvent) => void
   ): Promise<IHeartRateOutputData> {
 
-    const uploadUrl = '/api/csv/upload/heartRate/' + userKey;
+    const uploadUrl = this.getUploadUrl(userKey) + '/heartRate';
 
     const requestConfig: AxiosRequestConfig = {
       data: file,

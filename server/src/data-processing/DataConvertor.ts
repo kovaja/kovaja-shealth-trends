@@ -9,7 +9,12 @@ export class DataConvertor {
   }
 
   private normalizeFirstRow(data: string): string {
-    return data.replace(new RegExp('com.samsung.health.*\n', 'g'), '');
+    const rows = data.split('\n');
+
+    // So far we expect that every file has first row useless
+    rows.shift();
+
+    return rows.join('\n');
   }
 
   private isValidData(dataSample: object, keys: string[]): boolean {
@@ -58,16 +63,18 @@ export class DataConvertor {
     const normalizedData = this.normalizeFirstRow(data);
 
     return new Promise((resolve: Function, reject: Function) => {
-      CSV()
+      CSV({
+        flatKeys: true
+      })
         .fromString(normalizedData)
         .then(
           resolve as any,
-          reject as any
+          reject as any // does not work
         );
     });
   }
 
-  public convertFileToJson<T>(path: string, keys: string[]): Promise<T[]> {
+  public convertFileToJson(path: string, keys: string[]): Promise<object[]> {
     this.log('Reading ' + path);
 
     return this.readFile(path)
