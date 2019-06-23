@@ -54,7 +54,7 @@ export class SleepConvertor {
       numberOfRecords: rawData.length,
       averageRate: CommonConvertor.getAverage(totalHrs, rawData.length),
       weekDay: dataset,
-      yDomain: [0, 8]
+      yDomain: [0, 10]
     };
   }
 }
