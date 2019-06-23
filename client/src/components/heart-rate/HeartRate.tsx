@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { IHeartRateOutputData } from '../../../../shared/api.schemas';
 import { ActionType } from '../../enumerations/action-type';
@@ -12,26 +12,23 @@ interface IHeartRateProps {
   error: string;
 }
 
-class HeartRate extends Component<IHeartRateProps> {
-
-  public render(): JSX.Element {
-    if (this.props.error) {
-      return <ErrorMessage message={this.props.error}/>;
-    }
-
-    if (!this.props.data) {
-      return <FileUpload uploadType={ActionType.HeartRateDataUploadStart} />;
-    }
-
-    return (
-      <WeekDayAverage
-        averageRate={this.props.data.averageRate}
-        numberOfRecords={this.props.data.numberOfRecords}
-        weekDay={this.props.data.weekDay}
-      />
-
-    );
+function HeartRate(props: IHeartRateProps) {
+  if (props.error) {
+    return <ErrorMessage message={props.error} />;
   }
+
+  if (!props.data) {
+    return <FileUpload uploadType={ActionType.HeartRateDataUploadStart} />;
+  }
+
+  return (
+    <WeekDayAverage
+      averageRate={props.data.averageRate}
+      numberOfRecords={props.data.numberOfRecords}
+      weekDay={props.data.weekDay}
+    />
+
+  );
 }
 
 const mapStateToProps: MapStateToProps<IHeartRateProps, any, IAppState> = (state: IAppState): IHeartRateProps => {

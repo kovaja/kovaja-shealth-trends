@@ -10,6 +10,7 @@ import './Homepage.css';
 
 interface IHompageProps {
   activeView: ViewType;
+  displayTryAgain: boolean;
   dispatchDataReset?: ActionCreator<IAction>;
 }
 
@@ -27,13 +28,19 @@ class Homepage extends Component<IHompageProps> {
     }
   }
 
+  private renderTryAgainButton(): JSX.Element {
+    return (
+      <button className="pure-button pure-button-primary" onClick={this.onTryAgainClick}>
+          Try again
+        </button>
+    );
+  }
+
   public render(): JSX.Element {
     return (
       <div className="full-background">
         {this.renderView()}
-        <button className="pure-button pure-button-primary" onClick={this.onTryAgainClick}>
-          Try again
-        </button>
+        {this.props.displayTryAgain ? this.renderTryAgainButton() : null}
       </div>
     );
   }
@@ -41,7 +48,8 @@ class Homepage extends Component<IHompageProps> {
 
 const mapStateToProps: MapStateToProps<IHompageProps, any, IAppState> = (state: IAppState): IHompageProps => {
   return {
-    activeView: state.activeView
+    activeView: state.activeView,
+    displayTryAgain: state.heartRate.data !== null || state.heartRate.error !== null
   };
 };
 
